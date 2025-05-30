@@ -1,0 +1,264 @@
+:root {
+      --primary-dark: #121212;
+      --secondary-dark: #1a1a1a;
+      --accent-orange: #ff944d;
+      --accent-green: #00ff88;
+      --accent-blue: #00bfff;
+      --text-light: #f0f0f0;
+      --border-dark: #333;
+    }
+    
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background-color: var(--primary-dark);
+      color: var(--text-light);
+    }
+
+    header {
+      width: 100%;
+      background: #1e1e1e;
+      padding: 1.5rem 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .site-name {
+      font-family: 'Orbitron', monospace;
+      font-size: 2rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #00ff88, #00bfff, #ff0099, #ffd700);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: siteNameGradient 10s ease infinite;
+    }
+
+    @keyframes siteNameGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .crypto-menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #1a1a1a;
+      padding: 1rem 0;
+      border-bottom: 1px solid #333;
+      gap: 0.5rem;
+    }
+
+    .crypto-menu a {
+      color: #f0f0f0;
+      text-decoration: none;
+      padding: 0.8rem 2rem;
+      width: 80%;
+      max-width: 300px;
+      text-align: center;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: 500;
+      border-radius: 6px;
+      transition: all 0.3s ease;
+      background: rgba(30, 30, 30, 0.9);
+      border: 1px solid #333;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .crypto-menu a:nth-child(3) {
+      --click-color: #ff944d;
+    }
+
+    .crypto-menu a.active-click {
+      color: var(--click-color);
+      border-color: var(--click-color);
+      box-shadow: 0 0 15px var(--click-color);
+      transform: translateX(5px);
+    }
+
+    .crypto-menu a.login-btn {
+      background: linear-gradient(135deg, #0066ff 0%, #00bfff 100%);
+      border: 1px solid #00bfff;
+      color: white;
+    }
+
+    .invite-container {
+      background: var(--secondary-dark);
+      border-radius: 10px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+      border: 1px solid var(--border-dark);
+      box-shadow: 0 0 15px rgba(0,0,0,0.3);
+    }
+
+    .invite-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: var(--accent-orange);
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+
+    .referral-box {
+      background: rgba(40, 40, 40, 0.7);
+      border: 1px solid var(--accent-orange);
+      border-radius: 8px;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .referral-box::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        to bottom right,
+        transparent 45%,
+        rgba(255, 148, 77, 0.1) 50%,
+        transparent 55%
+      );
+      animation: shine 4s infinite;
+      z-index: 0;
+    }
+
+    @keyframes shine {
+      0% { transform: translate(-25%, -25%) rotate(0deg); }
+      100% { transform: translate(25%, 25%) rotate(360deg); }
+    }
+
+    .referral-link {
+      display: flex;
+      align-items: center;
+      background: rgba(30, 30, 30, 0.9);
+      border-radius: 6px;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .referral-link input {
+      flex-grow: 1;
+      background: transparent;
+      border: none;
+      color: var(--text-light);
+      font-family: 'Orbitron', sans-serif;
+      padding: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    .copy-btn {
+      background: var(--accent-orange);
+      color: #121212;
+      border: none;
+      border-radius: 4px;
+      padding: 0.5rem 1rem;
+      font-family: 'Orbitron', sans-serif;
+      font-weight: bold;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #ff8533;
+      transform: translateY(-1px);
+    }
+
+    .stats-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .stat-card {
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 8px;
+      padding: 1.2rem;
+      text-align: center;
+      border: 1px solid var(--border-dark);
+    }
+
+    .stat-value {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 1.8rem;
+      color: var(--accent-orange);
+      margin: 0.5rem 0;
+    }
+
+    .stat-label {
+      color: #aaa;
+      font-size: 0.9rem;
+    }
+
+    .reward-tier {
+      background: rgba(30, 30, 30, 0.8);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      border-left: 4px solid var(--accent-orange);
+    }
+
+    .tier-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.5rem;
+    }
+
+    .tier-name {
+      font-family: 'Orbitron', sans-serif;
+      color: var(--accent-orange);
+    }
+
+    .tier-reward {
+      background: rgba(255, 148, 77, 0.2);
+      color: var(--accent-orange);
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+    }
+
+    .tier-progress {
+      height: 6px;
+      background: #333;
+      border-radius: 3px;
+      margin-top: 0.5rem;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: var(--accent-orange);
+      width: 30%; /* Adjust based on actual progress */
+    }
+
+    footer {
+      background-color: #1a1a1a;
+      text-align: center;
+      padding: 1.5rem;
+      border-top: 1px solid #333;
+    }
+
+    .footer-text {
+      font-family: 'Orbitron', monospace;
+      font-size: 0.9rem;
+      background: linear-gradient(90deg, #00ff88, #00bfff, #ff0099, #ffd700);
+      background-size: 300% 300%;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      animation: footerGradient 10s ease infinite;
+    }
+
+    @keyframes footerGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
