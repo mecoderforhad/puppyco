@@ -16,7 +16,11 @@ const Routes = () => {
   const routesForPublic = [
     {
       path: "/home",
-      element: <Home />,
+      element: (
+        <Layout>
+          <Home />
+        </Layout>
+      ),
     },
   ];
 
@@ -26,18 +30,32 @@ const Routes = () => {
       path: "/",
       element: (
         <ProtectedRoute>
-          <Layout>
+          <Layout
+            footerText="PuppyCo offers 6 powerful products — Rocki, Leon, Lara, Husk, Tokito,
+        and Lord — each designed to generate daily profits and help you recover
+        your investment fast. Start earning with confidence today!"
+          >
             <Home />
           </Layout>
         </ProtectedRoute>
       ),
     },
     {
-      path: "/active-products",
+      path: "/active-product",
       element: (
         <ProtectedRoute>
-          <Layout>
+          <Layout footerText="© 2023 PuppyCo Crypto Platform | Your Lara investment is secured and generating profits">
             <ActiveProducts />
+          </Layout>
+        </ProtectedRoute>
+      ),
+    },
+    {
+      path: "/invite-earn",
+      element: (
+        <ProtectedRoute>
+          <Layout footerText="© 2023 PuppyCo Crypto Platform | Invite friends and grow together">
+            <InviteEarn />
           </Layout>
         </ProtectedRoute>
       ),
@@ -61,14 +79,6 @@ const Routes = () => {
     {
       path: "/register",
       element: <RegistrationPage />,
-    },
-    {
-      path: "/invite-earn",
-      element: <InviteEarn />,
-    },
-    {
-      path: "/active-product",
-      element: <ActiveProducts />,
     },
     {
       path: "/no-active-product",

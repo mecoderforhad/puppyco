@@ -1,6 +1,6 @@
 import { createContext, useState, ReactNode } from "react";
 import { AuthContextType, User } from "../types/auth/AuthInterface";
-import Swal from "sweetalert2";
+import { toast } from "react-toastify";
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
@@ -14,89 +14,97 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [user, setUser] = useState<User | null>(siteData?.user || null);
   const [token, setToken] = useState<string>(siteData?.token || "");
 
-  const requestOtp = async (phone: string, password: string) => {
+  const login = async (email: string, password: string) => {
     try {
       const res = await fetch(`${import.meta.env.VITE_BASE_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ phoneNumber: phone, password }),
+        body: JSON.stringify({ email, password }),
       });
-  
+
       const data = await res.json();
+
       if (!res.ok) {
-        Swal.fire({
-          icon: "error",
-          title: "Login Failed",
-          text: data.message || "Invalid phone number or password.",
-        });
-        throw new Error(data.message);
+        // If response status is not OK (e.g. 400, 401, 500)
+        const errorMessage = data.message || "Login failed. Please try again.";
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
       }
-  
-      return data;
-    } catch (err: any) {
-      Swal.fire({
-        icon: "error",
-        title: "Request Error",
-        text: err.message || "Something went wrong while sending OTP.",
-      });
-      throw err;
-    }
-  };
-  
-  const verifyOtp = async (phone: string, code: string) => {
-    try {
-      const res = await fetch(
-        `${import.meta.env.VITE_BASE_URL}/auth/login/verify`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            phoneNumber: phone,
-            otp: code,
-          }),
-        }
-      );
-  
-      const data = await res.json();
-      
       if (data.token) {
         const userData: User = {
-          id: data.id,
-          name: data.name,
-          phoneNumber: data.phoneNumber,
-          role: data.role,
-          token: data.token,
-          referId: data.referId
-          // Add other fields if needed
+          id: data.user?.id,
+          name: data.user?.name,
+          email: data?.user?.email,
+          role: data?.user?.role,
+          referId: data.user?.referId,
         };
-  
+
         setUser(userData);
         setToken(data.token);
-  
+
         localStorage.setItem(
           "site",
           JSON.stringify({ user: userData, token: data.token })
         );
-        return;
+        toast.success("Login successful!");
+      } else {
+        toast.error("Invalid credentials or no token received.");
+        throw new Error("Invalid credentials or no token.");
       }
-  
-      Swal.fire({
-        icon: "error",
-        title: "Verification Failed",
-        text: data.message || "Invalid OTP or phone number.",
-      });
-  
-      throw new Error(data.message);
     } catch (err: any) {
-      Swal.fire({
-        icon: "error",
-        title: "Verification Error",
-        text: err.message || "Something went wrong during OTP verification.",
-      });
+      const message = err?.message || "Something went wrong during login.";
+      toast.error(message);
       throw err;
     }
   };
-  
+
+  const register = async (name: string, email: string, password: string) => {
+    try {
+      const res = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/auth/register`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ name, email, password }),
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        const errorMessage = data.message || "Registration failed.";
+        toast.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      if (data.token) {
+        const userData: User = {
+          id: data.user?.id,
+          name: data.user?.name,
+          email: data.user?.email,
+          role: data.user?.role,
+          referId: data.user?.referId,
+        };
+
+        setUser(userData);
+        setToken(data.token);
+
+        localStorage.setItem(
+          "site",
+          JSON.stringify({ user: userData, token: data.token })
+        );
+        toast.success("Registration successful!");
+      } else {
+        toast.error("Registration successful but no token received.");
+        throw new Error("No token received after registration.");
+      }
+    } catch (err: any) {
+      const message =
+        err?.message || "Something went wrong during registration.";
+      toast.error(message);
+      throw err;
+    }
+  };
 
   const logOut = () => {
     setUser(null);
@@ -105,9 +113,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider
-      value={{ token, user, requestOtp, verifyOtp, logOut }}
-    >
+    <AuthContext.Provider value={{ token, user, login, register, logOut }}>
       {children}
     </AuthContext.Provider>
   );

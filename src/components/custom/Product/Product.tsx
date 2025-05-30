@@ -55,6 +55,7 @@ export default function ProductPage() {
         <div className="product wallet-pro defi lara">
           <img src="https://i.postimg.cc/3R4WDR7r/IMG-4914.png" alt="Lara" />
           <h3 className="product-name">Lara</h3>
+          <span className="status-badge">ACTIVE</span>
           <div className="description">
             Lara is a cryptocurrency investment product priced at{" "}
             <span className="highlight">$1,280</span>. It offers a daily profit

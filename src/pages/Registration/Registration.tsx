@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import "../login/LoginPage.css";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useAuth } from "../../provider/useAuth";
 
 const generateCaptcha = () => {
   const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
@@ -11,23 +15,39 @@ const generateCaptcha = () => {
   return captcha;
 };
 
+type FormValues = {
+  name: string;
+  email: string;
+  password: string;
+  captchaInput: string;
+};
+
 const RegistrationPage = () => {
   const [captcha, setCaptcha] = useState(generateCaptcha());
-  const [inputCaptcha, setInputCaptcha] = useState("");
+  const { register: registration } = useAuth();
+  const {
+    register,
+    handleSubmit,
+    setValue,
+    formState: { errors },
+  } = useForm<FormValues>();
 
   const refreshCaptcha = () => {
-    setCaptcha(generateCaptcha());
-    setInputCaptcha("");
+    const newCaptcha = generateCaptcha();
+    setCaptcha(newCaptcha);
+    setValue("captchaInput", "");
   };
 
-  const handleSubmit = (e: any) => {
-    e.preventDefault();
-    if (inputCaptcha !== captcha) {
-      alert("Captcha verification failed. Please try again.");
+  const onSubmit = async (data: FormValues) => {
+    if (data.captchaInput !== captcha) {
+      toast.error("Captcha verification failed. Please try again.");
       refreshCaptcha();
     } else {
-      alert("Registration successful! Redirecting...");
-      // Registration submission logic here
+      try {
+        await registration(data?.name, data?.email, data?.password);
+      } catch (error: any) {
+        toast.error(error);
+      }
     }
   };
 
@@ -53,8 +73,11 @@ const RegistrationPage = () => {
 
   return (
     <div className="login-page">
+      <ToastContainer />
       <header>
-        <div className="site-name"><Link to="/">PuppyCo</Link></div>
+        <div className="site-name">
+          <Link to="/">PuppyCo</Link>
+        </div>
       </header>
 
       <div className="particles" id="particles"></div>
@@ -62,15 +85,16 @@ const RegistrationPage = () => {
       <div className="login-container">
         <h1 className="login-title">Register New Account</h1>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
             <label>User Name</label>
             <input
               type="text"
               className="form-control"
               placeholder="Enter your name"
-              required
+              {...register("name", { required: true })}
             />
+            {errors.name && <p className="error text-rose-600">Username is required</p>}
           </div>
 
           <div className="form-group">
@@ -79,8 +103,9 @@ const RegistrationPage = () => {
               type="email"
               className="form-control"
               placeholder="Enter your email"
-              required
+              {...register("email", { required: true })}
             />
+            {errors.email && <p className="error">Email is required</p>}
           </div>
 
           <div className="form-group">
@@ -89,8 +114,9 @@ const RegistrationPage = () => {
               type="password"
               className="form-control"
               placeholder="Enter your password"
-              required
+              {...register("password", { required: true })}
             />
+            {errors.password && <p className="error">Password is required</p>}
           </div>
 
           <div className="form-group">
@@ -109,10 +135,11 @@ const RegistrationPage = () => {
               type="text"
               className="form-control"
               placeholder="Enter the captcha above"
-              value={inputCaptcha}
-              onChange={(e) => setInputCaptcha(e.target.value)}
-              required
+              {...register("captchaInput", { required: true })}
             />
+            {errors.captchaInput && (
+              <p className="error">Captcha is required</p>
+            )}
           </div>
 
           <button type="submit" className="btn-login">
